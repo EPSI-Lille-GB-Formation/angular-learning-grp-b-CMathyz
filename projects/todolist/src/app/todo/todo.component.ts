@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Todos } from '../todo';
+import { Todo } from '../todo';
 import { CommonModule } from '@angular/common';
 import { TodoListDirective } from '../todo-list.directive';
 @Component({
@@ -37,7 +37,7 @@ import { TodoListDirective } from '../todo-list.directive';
 })
 export class TodoComponent {
     @Input("value")
-    todo: Todos | undefined;
+    todo: Todo | undefined;
 
     onCheck(){
       if(this.todo){

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TODOS } from '../mock-todo';
 import { TodoListDirective } from '../todo-list.directive';
 import { TodoComponent } from '../todo/todo.component';
+import {TodoService} from '../todo.service';
+import {Todo} from '../todo';
 
 @Component({
   selector: 'todo-list',
@@ -12,9 +13,9 @@ import { TodoComponent } from '../todo/todo.component';
     <h1>Liste des chose a faire</h1>
 
       <a href="#" role="button" (click)="onClickTodo()">A faire </a>
-      <a href="#" role="button" (click)="onClickTodoCpmleted()">Terminée</a>
-      <a href="#" role="button" (click)="onClickTodoAfficher()">Afficher tous</a>
-      <ng-container *ngFor="let todo of todolist">
+      <a href="#" role="button" (click)="onClickTodoCompleted()">Terminée</a>
+      <a href="#" role="button" (click)="onClickTodoShowEverything()">Afficher tous</a>
+      <ng-container *ngFor="let todo of todoList">
       <ng-container *ngIf=" todo.isCompleted === completedFilter || completedFilter === null">
         <todo [value] = "todo" />
       </ng-container>
@@ -24,17 +25,28 @@ import { TodoComponent } from '../todo/todo.component';
     ` `
   ]    
 })
-export class TodoListComponent {
-  todolist = TODOS;
-  completedFilter : boolean | null = null;
-  onClickTodo(){
-    this.completedFilter = false;
+export class TodoListComponent{
+  todoList:Todo[] = [];
 
+  completedFilter:boolean = false;
+  showEverything:boolean = false;
+
+  constructor(private todoservice: TodoService) {
   }
-  onClickTodoCpmleted(){
-    this.completedFilter = true;
+
+  ngOnInit():void{
+    this.todoservice.getTodoList().subscribe(todos => this.todoList = todos)
+    this.todoservice.getTodoById(5).subscribe(todo => console.log(todo))
   }
-  onClickTodoAfficher(){
-    this.completedFilter = null;
+  onClickTodo():void{
+    this.completedFilter = false
+    this.showEverything = false
+  }
+  onClickTodoCompleted():void{
+    this.completedFilter = true
+    this.showEverything = false
+  }
+  onClickTodoShowEverything():void{
+    this.showEverything = true
   }
 }
